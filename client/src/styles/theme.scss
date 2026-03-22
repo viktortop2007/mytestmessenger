@@ -1,0 +1,35 @@
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f0f2f5;
+  --bg-header: #ffffff;
+  --bg-chat: #ffffff;
+  --text-primary: #111111;
+  --text-secondary: #65676b;
+  --border-color: #e4e6e9;
+  --accent: #0088cc;
+  --accent-hover: #0077b3;
+  --message-outgoing: #e4e6e9;
+  --message-incoming: #0088cc;
+  --message-outgoing-text: #111111;
+  --message-incoming-text: #ffffff;
+  --scrollbar-thumb: #bcc0c4;
+  --scrollbar-track: #f0f2f5;
+}
+
+body.dark {
+  --bg-primary: #1e1e2e;
+  --bg-secondary: #181825;
+  --bg-header: #181825;
+  --bg-chat: #1e1e2e;
+  --text-primary: #cdd6f4;
+  --text-secondary: #bac2de;
+  --border-color: #313244;
+  --accent: #89b4fa;
+  --accent-hover: #6c9feb;
+  --message-outgoing: #313244;
+  --message-incoming: #89b4fa;
+  --message-outgoing-text: #cdd6f4;
+  --message-incoming-text: #1e1e2e;
+  --scrollbar-thumb: #313244;
+  --scrollbar-track: #1e1e2e;
+}

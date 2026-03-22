@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id               String    @id @default(cuid())
+  phoneNumber      String    @unique
+  username         String    @unique
+  password         String?
+  firstName        String
+  lastName         String?
+  avatarUrl        String?
+  bio              String?
+  lastSeen         DateTime  @default(now())
+  isOnline         Boolean   @default(false)
+  pushSubscription Json?
+  settings         Json      @default("{}")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  messages         Message[]
+  chats            ChatParticipant[]
+  createdChats     Chat[]     @relation("Creator")
+  reactions        Reaction[]
+  userSettings     ChatUserSettings[]
+}
+
+model Chat {
+  id          String    @id @default(cuid())
+  type        ChatType  @default(PRIVATE)
+  title       String?
+  avatarUrl   String?
+  createdById String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  creator      User                   @relation("Creator", fields: [createdById], references: [id])
+  participants ChatParticipant[]
+  messages     Message[]
+  settings     ChatUserSettings[]
+}
+
+enum ChatType {
+  PRIVATE
+  GROUP
+  CHANNEL
+}
+
+model ChatParticipant {
+  userId          String
+  chatId          String
+  role            ParticipantRole @default(MEMBER)
+  permissions     Json?
+  lastReadMessageId String?
+  isMuted         Boolean          @default(false)
+  mutedUntil      DateTime?
+  joinedAt        DateTime         @default(now())
+  leftAt          DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+  chat Chat @relation(fields: [chatId], references: [id])
+
+  @@id([userId, chatId])
+}
+
+enum ParticipantRole {
+  MEMBER
+  ADMIN
+  CREATOR
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  chatId      String
+  senderId    String
+  text        String?
+  replyToId   String?
+  forwardedFromId String?
+  editedAt    DateTime?
+  deletedAt   DateTime?
+  deletedForUserIds Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  chat         Chat              @relation(fields: [chatId], references: [id])
+  sender       User              @relation(fields: [senderId], references: [id])
+  replyTo      Message?          @relation("Reply", fields: [replyToId], references: [id])
+  forwardedFrom Message?         @relation("Forward", fields: [forwardedFromId], references: [id])
+  attachments  Attachment[]
+  reactions    Reaction[]
+
+  // обратные связи
+  replies      Message[]         @relation("Reply")
+  forwards     Message[]         @relation("Forward")
+}
+
+model Attachment {
+  id          String   @id @default(cuid())
+  messageId   String
+  fileUrl     String
+  fileType    String
+  fileName    String
+  fileSize    Int
+  width       Int?
+  height      Int?
+  thumbUrl    String?
+  deletedAt   DateTime?
+
+  message Message @relation(fields: [messageId], references: [id])
+}
+
+model Reaction {
+  id        String   @id @default(cuid())
+  messageId String
+  userId    String
+  emoji     String
+  createdAt DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id])
+  user    User   @relation(fields: [userId], references: [id])
+
+  @@unique([messageId, userId, emoji])
+}
+
+model ChatUserSettings {
+  userId             String
+  chatId             String
+  isArchived         Boolean  @default(false)
+  customTitle        String?
+  customAvatar       String?
+  lastReadMessageId  String?
+  notificationSettings Json?
+
+  user User @relation(fields: [userId], references: [id])
+  chat Chat @relation(fields: [chatId], references: [id])
+
+  @@id([userId, chatId])
+}

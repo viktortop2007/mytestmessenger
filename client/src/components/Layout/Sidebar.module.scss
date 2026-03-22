@@ -1,0 +1,50 @@
+.sidebar {
+  width: 320px;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+  height: 100vh;
+
+  .header {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+
+    .userInfo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+
+      span {
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .logout {
+        background: none;
+        border: none;
+        color: var(--accent);
+        cursor: pointer;
+        font-size: 14px;
+      }
+    }
+
+    .search {
+      input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        font-size: 14px;
+
+        &:focus {
+          outline: none;
+          border-color: var(--accent);
+        }
+      }
+    }
+  }
+}
